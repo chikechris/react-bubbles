@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 
 const Login = () => {
   const [input, setInput] = useState({
@@ -16,7 +17,12 @@ const Login = () => {
   const handleSubmit = e => {
     e.preventDefault()
     console.log('test')
+    axios
+      .post('http://localhost:5000/api/login', input)
+      .then(res => console.log(res.data))
+      .catch(err => console.log(err))
   }
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -42,4 +48,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Login;
