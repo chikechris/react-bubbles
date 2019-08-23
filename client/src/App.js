@@ -13,6 +13,7 @@ function App () {
     <div className='App'>
       <div className='navigation'>
         <Link to='/'>Login</Link>
+        <br />
         <Link to='/bubblepage'>Bubble Page</Link>
       </div>
       <Route exact path='/' component={Login} />
