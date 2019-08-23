@@ -19,7 +19,7 @@ const Login = () => {
     console.log('test')
     axios
       .post('http://localhost:5000/api/login', input)
-      .then(res => console.log(res.data))
+
       .then(res => {
         console.log(res)
         localStorage.setItem('token', res.data.payload)
@@ -52,4 +52,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Login
