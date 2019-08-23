@@ -4,18 +4,28 @@ import styled from 'styled-components'
 
 const FormStyle = styled.div`
   body {
-    max-width: 100%;
-    
+    width: 100%;
+    height: 100%;
+    margin-top: 10%;
+    transform: translateY(-20%);
+    position: absolute;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
   }
   form {
     display: flex;
-    max-width: 100%;
+    max-width: 50%;
+    width: 100%;
     height: 100%;
-    margin:  auto;
+    margin: 0 auto;
     flex-direction: column;
+    align-items: center;
     align-content: center;
     justify-content: center;
-    
+    padding: 30px;
+    border-radius: 5px;
   }
 
   input {
@@ -29,8 +39,8 @@ const FormStyle = styled.div`
     border: 0px;
     border-bottom: 2px solid #282c34;
     padding: 10px;
-    color: 'white';
-    width: 100%;
+    color: "white";
+    width: 80%;
   }
   button {
     background: #282c34;

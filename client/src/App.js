@@ -10,7 +10,11 @@ import './styles.scss'
 function App () {
   const [colorList, setColorList] = useState([])
   return (
-    <div className='App'>
+
+    <div className='Appp'>
+      <header className="App-header">
+        <h2>React Bubble App</h2>
+      </header>
       <div className='navigation'>
         <Link to='/'>Login</Link>
         <br />
