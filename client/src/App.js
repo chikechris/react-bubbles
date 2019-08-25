@@ -1,25 +1,22 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
-import { Link, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import Login from './components/Login'
-import BubblePage from './components/BubblePage'
-import PrivateRoute from './utils/PrivateRoute'
-import './styles.scss'
+import Login from './components/Login';
+import BubblePage from './components/BubblePage';
+import PrivateRoute from './utils/PrivateRoute';
+import './styles.scss';
 
-function App () {
-  const [colorList, setColorList] = useState([])
+function App() {
+  const [colorList, setColorList] = useState([]);
   return (
-
+    <Router>
     <div className='Appp'>
-      <header className="App-header">
+      <header className='App-header'>
         <h2>React Bubble App</h2>
       </header>
-      <div className='navigation'>
-        <Link to='/'>Login</Link>
-        <br />
-        <Link to='/bubblepage'>Bubble Page</Link>
-      </div>
+      
+        
       <Route exact path='/' component={Login} />
       {/*
           Build a PrivateRoute component that will
@@ -27,6 +24,7 @@ function App () {
         */}
       <PrivateRoute path='/bubblepage' component={BubblePage} />
     </div>
-  )
+    </Router>
+  );
 }
-export default App
+export default App;

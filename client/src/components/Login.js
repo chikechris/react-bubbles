@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import styled from 'styled-components'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { withFormik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 const FormStyle = styled.div`
   body {
@@ -39,7 +42,7 @@ const FormStyle = styled.div`
     border: 0px;
     border-bottom: 2px solid #282c34;
     padding: 10px;
-    color: "white";
+    color: 'white';
     width: 80%;
   }
   button {
@@ -53,59 +56,71 @@ const FormStyle = styled.div`
     text-transform: uppercase;
     margin-bottom: 10px;
   }
-`
-
-const Login = () => {
-  const [input, setInput] = useState({
-    username: ' ',
-    paasword: ' '
-  })
-  // make a post request to retrieve a token from the api
-  // when you have handled the token, navigate to the BubblePage route
-
-  const handleChange = e => {
-    setInput({ ...input, [e.target.name]: e.target.value })
+  p {
+    text-align: center;
+    color: blue;
   }
-  console.log(input)
+`;
 
-  const handleSubmit = e => {
-    e.preventDefault()
-    console.log('test')
-    axios
-      .post('http://localhost:5000/api/login', input)
-
-      .then(res => {
-        console.log(res)
-        localStorage.setItem('token', res.data.payload)
-      })
-      .catch(err => console.log(err))
-  }
-
+function Login({ errors, touched, status, props }) {
   return (
-    <>
-      <FormStyle>
-        <form onSubmit={handleSubmit}>
-          <h2>User Name</h2>
-          <input
-            type='text'
+    <FormStyle>
+      <div className='form-module'>
+        <Form className='loginForm'>
+          {touched.username && errors.username && <p>{errors.username}</p>}
+          <Field
+            className='zr_un_email valid'
+            type='username'
             name='username'
-            value={input.username}
-            onChange={handleChange}
+            placeholder='username'
           />
-          <h2>Password</h2>
-          <input
-            type='password'
-            name='password'
-            value={input.password}
-            onChange={handleChange}
-          />
-          <div>
-            <button> Login </button>
-          </div>
-        </form>
-      </FormStyle>
-    </>
-  )
-}
 
-export default Login
+          {touched.password && errors.password && <p>{errors.password}</p>}
+          <Field type='password' name='password' placeholder='Password' />
+
+          <button type='submit'>Sign In</button>
+          <p>
+            Don't have an account?
+            <Link to='../Sign-Up Form'>
+              <br />
+              <button>Sign Up </button>
+            </Link>
+          </p>
+        </Form>
+        <div></div>
+      </div>
+    </FormStyle>
+  );
+}
+const FormikLoginForm = withFormik({
+  mapPropsToValues({ username, password }) {
+    return {
+      username: username || '',
+      password: password || '',
+    };
+  },
+  validationSchema: Yup.object().shape({
+    username: Yup.string()
+      .min(5)
+      .required('User Name is required'),
+    password: Yup.string()
+      .min(8)
+      .required('Password is required'),
+  }),
+  handleSubmit(values, { resetForm, setStatus, props }) {
+    console.log(values);
+    axios
+      .post('http://localhost:5000/api/login', values)
+      .then(res => {
+        console.log('login Payload', res.data.payload);
+        setStatus(res.data.payload);
+        resetForm();
+
+        localStorage.setItem('token', res.data.payload);
+        props.history.push('/bubblePage');
+      })
+      .catch(err => console.log(err.response));
+  },
+})(Login);
+
+export default FormikLoginForm;
