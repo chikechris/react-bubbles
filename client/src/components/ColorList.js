@@ -1,46 +1,76 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react'
+import { axiosWithAuth } from '../utils/axiosWithAuth'
 
 const initialColor = {
-  color: "",
-  code: { hex: "" }
-};
+  color: '',
+  code: { hex: '' }
+}
 
 const ColorList = ({ colors, updateColors }) => {
-  console.log(colors);
-  const [editing, setEditing] = useState(false);
-  const [colorToEdit, setColorToEdit] = useState(initialColor);
+  console.log(colors)
+  const [editing, setEditing] = useState(false)
+  const [colorToEdit, setColorToEdit] = useState(initialColor)
 
   const editColor = color => {
-    setEditing(true);
-    setColorToEdit(color);
-  };
+    setEditing(true)
+    setColorToEdit(color)
+  }
 
   const saveEdit = e => {
-    e.preventDefault();
+    e.preventDefault()
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is is saved right now?
-  };
+    axiosWithAuth()
+      .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        console.log(res)
+        const colorsArray = [...colors]
+        for (let i = 0; i < colorsArray.length; i++) {
+          // console.log(colorsArray[i].id)
+          if (colorsArray[i].id === colorToEdit.id) {
+            // console.log('color array', colorsArray[i])
+            // console.log('edited color', colorToEdit)
+            colorsArray[i].color = colorToEdit.color
+            colorsArray[i].code = colorToEdit.code
+            colorsArray[i].id = colorToEdit.id
+            // console.log('colors array', colorsArray[i])
+          }
+        }
+        // console.log(colorsArray)
+        updateColors([...colorsArray])
+      })
+      .catch(err => console.log(err))
+  }
 
   const deleteColor = color => {
     // make a delete request to delete this color
-  };
+    console.log(color.id)
+    axiosWithAuth()
+      .delete(`http://localhost:5000/api/colors/${color.id}`)
+      .then(res => {
+        console.log(res)
+        updateColors(
+          colors.filter(colorElement => colorElement.id !== color.id)
+        )
+      })
+      .catch(err => console.log(err))
+  }
 
   return (
-    <div className="colors-wrap">
+    <div className='colors-wrap'>
       <p>colors</p>
       <ul>
         {colors.map(color => (
           <li key={color.color} onClick={() => editColor(color)}>
             <span>
-              <span className="delete" onClick={() => deleteColor(color)}>
+              <span className='delete' onClick={() => deleteColor(color)}>
                 x
-              </span>{" "}
+              </span>{' '}
               {color.color}
             </span>
             <div
-              className="color-box"
+              className='color-box'
               style={{ backgroundColor: color.code.hex }}
             />
           </li>
@@ -70,16 +100,16 @@ const ColorList = ({ colors, updateColors }) => {
               value={colorToEdit.code.hex}
             />
           </label>
-          <div className="button-row">
-            <button type="submit">save</button>
+          <div className='button-row'>
+            <button type='submit'>save</button>
             <button onClick={() => setEditing(false)}>cancel</button>
           </div>
         </form>
       )}
-      <div className="spacer" />
+      <div className='spacer' />
       {/* stretch - build another form here to add a color */}
     </div>
-  );
-};
+  )
+}
 
-export default ColorList;
+export default ColorList
